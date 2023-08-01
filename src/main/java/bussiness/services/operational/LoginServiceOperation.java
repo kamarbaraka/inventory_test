@@ -1,5 +1,6 @@
 package bussiness.services.operational;
 
+import bussiness.services.management.UserManagementService;
 import jakarta.persistence.*;
 import persistence.User;
 
@@ -16,98 +17,41 @@ public class LoginServiceOperation {
      * @return the user logged in*/
     public User login(){
 
-        /*construct an entity manager factory from which construct an entity manager*/
-        EntityManagerFactory factory = Persistence.createEntityManagerFactory(
-                "inventory_management"
-        );
-
         /*declare a user object*/
         User user;
 
-        try {
+        /*construct a user management service*/
+        UserManagementService userManagementService = new UserManagementService();
 
-            /*construct an entity manager from the factory*/
-            EntityManager manager = factory.createEntityManager();
-
-            /*get transaction from the manager*/
-            EntityTransaction transaction = manager.getTransaction();
-
-            /*construct a scanner to listen for user input and attach the standard input stream to it*/
-            Scanner input = new Scanner(System.in);
+        /*construct a scanner to listen for user input and attach the standard input stream to it*/
+        Scanner input = new Scanner(System.in);
 
 
-            /*login operation*/
-            while (true){
+        /*login operation*/
+        while (true){
 
-                /*get the username*/
-                System.out.println("enter your username");
-                String userName = input.next();
+            /*get the username*/
+            System.out.println("enter your username");
+            String userName = input.next();
 
-                /*get the user password*/
-                System.out.println("enter the password");
-                String userPassword = input.next();
+            /*get the user password*/
+            System.out.println("enter the password");
+            String userPassword = input.next();
 
-                /*validate the credentials*/
+            /*validate the credentials*/
 
-                /*check the username*/
-                try{
+            /*check the username*/
+            user = userManagementService.checkCredentials(userName, userPassword);
 
-                    /*check and connect to the persistence unit*/
-                    if (!transaction.isActive())
-                        transaction.begin();
+            if (user != null){
 
-                    /*query*/
-                    manager.createQuery(
-                            "select username from User user where username=:userName", String.class
-                    ).setParameter("userName", userName).getSingleResult();
-
-                    /*commit the query*/
-                    transaction.commit();
-
-                    /*check the user password*/
-
-                    /*check and connect to the persistence unit*/
-                    if (!transaction.isActive())
-                        transaction.begin();
-
-                    /*query, try as multiple users might have the same password*/
-                    try
-                    {
-                        manager.createQuery(
-                                "select password from User user where password=:userPassword", String.class
-                        ).setParameter("userPassword", userPassword).getSingleResult();
-                    }
-                    catch (NoResultException ignored){}
-
-                    /*commit the query*/
-                    transaction.commit();
-
-                    /*check and open a connection to the database*/
-                    if (!transaction.isActive())
-                        transaction.begin();
-
-                    /*initialize the user object with the user from the database*/
-                    user = manager.createQuery(
-                            "select user from User user where username=:userName", User.class
-                    ).setParameter("userName", userName).getSingleResult();
-
-                    /*break when all queries are successful*/
-                    break;
-
-                }
-                catch (NoResultException exception){
-
-                    /*notify the user*/
-                    System.out.println("incorrect username or password");
-
-                }
-
+                /*break if successful*/
+                break;
             }
 
-        }
-        finally {
-            if (factory.isOpen())
-                factory.close();
+            /*notify the user*/
+            System.out.println("incorrect username or password");
+
         }
 
         /*return the user object upon successful login*/

@@ -1,6 +1,7 @@
 package bussiness.services.operational;
 
 import bussiness.services.management.InventoryManagementService;
+import bussiness.services.management.StockManagementService;
 import jakarta.persistence.*;
 import persistence.Item;
 import persistence.ItemInventory;
@@ -17,11 +18,13 @@ public class StockPurchaseServiceOperation {
 
     public static boolean run(){
 
+        /*construct a stock management service*/
+        StockManagementService stockManagementService = new StockManagementService();
+
         /*construct a scanner to get user input*/
         Scanner input = new Scanner(System.in);
 
-        boolean end = true;
-        while (end){
+        while (true){
 
             /*get the name of the item*/
             System.out.println("enter the name of the item");
@@ -43,82 +46,45 @@ public class StockPurchaseServiceOperation {
             System.out.println("enter the column number to store the item");
             int inputColumn = input.nextInt();
 
+            /*construct the item*/
+            Item item = new Item();
+            item.setItemName(inputItemName);
+            item.setPrice(inputPrice);
 
-            /*construct an entity manager factory*/
-            try (EntityManagerFactory factory = Persistence.createEntityManagerFactory(
-                    "inventory_management")) {
+            /*construct item location*/
+            ItemLocation location = new ItemLocation();
+            location.setSection(section);
+            location.setCol(inputColumn);
 
-                /*construct an entity manager*/
-                try (EntityManager manager = factory.createEntityManager()) {
+            /*construct inventory*/
+            ItemInventory inventory = new ItemInventory();
+            inventory.setInventoryName(inputItemName);
+            inventory.addItem(item);
+            inventory.setItemLocation(location);
+            inventory.setCount(inputCount);
 
-                    /*construct an entity transaction*/
-                    EntityTransaction transaction = manager.getTransaction();
+            /*restock the item*/
+            if (!stockManagementService.addStock(item, location, inventory)){
 
-
-                    /*check and begin the transaction*/
-                    if (!transaction.isActive())
-                        transaction.begin();
-
-                    /*construct the item*/
-                    Item item = new Item();
-                    item.setItemName(inputItemName);
-                    item.setPrice(inputPrice);
-
-                    /*check for the existence of the item in the inventory*/
-                    try {
-                        ItemInventory persistedItemInventory = manager.createQuery(
-                                "select inventory from ItemInventory inventory where inventoryName=:inputItemName", ItemInventory.class
-                        ).setParameter("inputItemName", inputItemName).getSingleResult();
-
-                        /*update counts*/
-                        InventoryManagementService service = new InventoryManagementService();
-                        service.restock(item, inputCount);
-
-                    }
-                    catch (NoResultException exception) {/*construct item location*/
-                        ItemLocation location = new ItemLocation();
-                        location.setSection(section);
-                        location.setCol(inputColumn);
-
-                        /*construct inventory*/
-                        ItemInventory inventory = new ItemInventory();
-                        inventory.setInventoryName(inputItemName);
-                        inventory.setItemLocation(location);
-                        inventory.setCount(inputCount);
-
-                        /*add number of items to inventory*/
-                        inventory.addItem(item);
-
-                        /*persist the entities*/
-                        manager.persist(item);
-                        manager.persist(location);
-                        manager.persist(inventory);
-
-                        /*commit the transaction*/
-                        transaction.commit();
-                    }
-
-                }
+                /*notify the user*/
+                System.out.println("an error occurred!");
+                continue;
             }
 
             System.out.println("do you wish to add more stock? (Y or N)");
             switch (input.next()){
 
-                case "N", "n" -> {break;}
-
-                case "Y", "y" -> {continue;}
-
+                case "Y", "y", "Yes", "yes", "YES" -> {continue;}
+                case "N", "n", "No", "no", "NO" -> {break;}
                 default -> {
                     Toolkit.getDefaultToolkit().beep();
-                    System.out.println("invalid input");}
+                    System.out.println("invalid input");
+                    continue;
+                }
             }
-
-            end = !end;
             break;
         }
-
         return true;
-
     }
 
     public static void main(String[] args) {

@@ -55,4 +55,49 @@ public class InventoryManagementService {
         return true;
     }
 
+    public ItemInventory searchInventory(String itemToSearch){
+
+        /*declare inventory item*/
+        ItemInventory inventory;
+
+        /*construct an entity manager factory to initialize a session*/
+        try (EntityManagerFactory factory = Persistence.createEntityManagerFactory(
+                "inventory_management"
+        )) {
+
+            /*construct an entity manager*/
+            try (EntityManager manager = factory.createEntityManager()) {
+
+                /*get the transaction*/
+                EntityTransaction transaction = manager.getTransaction();
+
+                try
+                {
+                    /*check and begin transaction*/
+                    if (!transaction.isActive())
+                        transaction.begin();
+
+                    /*search for the item*/
+                    inventory = manager.createQuery(
+                            "select inventory from ItemInventory inventory where inventoryName=:itemToSearch",
+                            ItemInventory.class
+                    ).setParameter("itemToSearch", itemToSearch).getSingleResult();
+
+                    /*commit the transaction*/
+                    transaction.commit();
+
+                }
+                catch (NoResultException exception){
+
+                    /*null if not found*/
+                    inventory = null;
+                }
+
+
+            }
+        }
+
+        return inventory;
+    }
+
 }

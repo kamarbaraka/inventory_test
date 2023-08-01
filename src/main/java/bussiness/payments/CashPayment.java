@@ -10,9 +10,9 @@ import java.math.BigDecimal;
 
 public class CashPayment extends Payment {
 
-    public CashPayment(double amount) {
+    public CashPayment(BigDecimal amount) {
 
         super();
-        super.setAmount(BigDecimal.valueOf(amount));
+        super.setAmount(amount);
     }
 }

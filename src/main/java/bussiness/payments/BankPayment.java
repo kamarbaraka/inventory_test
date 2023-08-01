@@ -10,10 +10,10 @@ import java.math.BigDecimal;
 
 public class BankPayment extends Payment {
 
-    public BankPayment(String bankName, String accountName, double amount) {
+    public BankPayment(String bankName, String accountName, BigDecimal amount) {
         super();
         super.setBankName(bankName);
         super.setAccountName(accountName);
-        super.setAmount(BigDecimal.valueOf(amount));
+        super.setAmount(amount);
     }
 }

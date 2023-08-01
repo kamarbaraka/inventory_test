@@ -1,16 +1,13 @@
 package persistence;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 
 /**
  *  a class to simulate an order.
  *  @author kamar baraka.*/
 
 @Entity
-public class Order {
+public class ItemOrder {
 
     @Id
     @GeneratedValue
@@ -19,7 +16,18 @@ public class Order {
     @ManyToOne
     private Item orderedItem;
 
+    @OneToOne
+    private Bill bill;
+
     private String status;
+
+    public Bill getBill() {
+        return bill;
+    }
+
+    public void setBill(Bill bill) {
+        this.bill = bill;
+    }
 
     public Item getOrderedItem() {
         return orderedItem;

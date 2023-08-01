@@ -11,7 +11,7 @@ import java.math.BigDecimal;
  *  @author kamar baraka.*/
 
 @Entity
-public abstract class Payment {
+public class Payment {
 
     @Id
     @GeneratedValue

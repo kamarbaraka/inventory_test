@@ -1,6 +1,7 @@
 package bussiness.services.operational;
 
 import bussiness.roles.*;
+import bussiness.services.management.UserManagementService;
 import jakarta.persistence.*;
 import persistence.Address;
 import persistence.Role;
@@ -17,7 +18,7 @@ public class RegistrationServiceOperation {
     /**
      * register a user.
      * @return "success" when successful*/
-    public String run(){
+    public boolean run(){
 
         /*construct a scanner and attach the standard input stream to it*/
         Scanner input = new Scanner(System.in);
@@ -28,154 +29,121 @@ public class RegistrationServiceOperation {
         /*construct a user and fill it with user details from the input*/
         User user = new User();
 
+        /*construct a user management service*/
+        UserManagementService userManagementService = new UserManagementService();
+
         /*perform transaction with the user*/
 
-        /*construct an entity manager factory from which create entity manager*/
-        try (EntityManagerFactory factory = Persistence.createEntityManagerFactory(
-                "inventory_management"
-        ))
-        {
-            /*construct an entity manager from the factory*/
+        /*loop to listen for user input*/
 
-            EntityManager manager = factory.createEntityManager();
+        while (true) {
 
-            /*get transaction from the manager*/
-            EntityTransaction transaction = manager.getTransaction();
+            /*extract data from user to persist it
+            * get the username*/
+            System.out.println("enter username");
+            String userName = input.next();
 
-            /*loop to listen for user input*/
+            /*check if the username exists*/
+            if (userManagementService.checkUserName(userName)){
 
-            while (true) {
-
-                /*extract data from user to persist it
-                * get the username*/
-                System.out.println("enter username");
-                String userName = input.next();
-
-                /*check if the username exists*/
-                try
-                {
-                    /*check and begin transaction with the database*/
-                    if (!transaction.isActive())
-                        transaction.begin();
-
-                    manager.createQuery(
-                            "select username from User user where username=:userName",
-                            String.class).setParameter("userName", userName).getSingleResult();
-
-                    /*execute the query*/
-                    transaction.commit();
-                    System.out.println("username is already taken");
-                    continue;
-                }
-                catch (NoResultException ignored){
-                }
-
-                /*set the username*/
-                user.setUsername(userName);
-
-                /*get and ste the first name*/
-                System.out.println("enter your first name");
-                String firstName = input.next();
-                user.setFirstName(firstName);
-
-                /*get and set the last name*/
-                System.out.println("enter your last name");
-                String lastName = input.next();
-                user.setLastName(lastName);
-
-                /*get and set the contact */
-                System.out.println("enter your email address");
-                String contact = input.next();
-                user.setContact(contact);
-
-                /*get and set the user role*/
-                ROLE:
-                while (true)
-                {
-                    System.out.println("enter the role (ADMIN, CASHIER, ACCOUNTANT, TELLER, USER)");
-                    String userRole = input.next();
-                    switch (userRole) {
-                        case "ADMIN" -> {
-                            user.setRole(AdminRole.getInstance());
-                            break ROLE;
-                        }
-                        case "CASHIER" -> {
-                            user.setRole(CashierRole.getInstance());
-                            break ROLE;
-                        }
-                        case "ACCOUNTANT" -> {
-                            Role role = AccountantRole.getInstance();
-                            user.setRole(role);
-                            break ROLE;
-                        }
-                        case "TELLER" -> {
-                            user.setRole(TellerRole.getInstance());
-                            break ROLE;
-                        }
-                        case "USER" -> {
-                            user.setRole(UserRole.getInstance());
-                            break ROLE;
-                        }
-                        default -> {
-                            System.out.println("no such role");
-                        }
-                    }
-                }
-
-                /*get and set the password */
-                System.out.println("enter your password");
-                String password = input.next();
-                user.setPassword(password);
-
-                /*get the address of the user.
-                * get and set the street */
-                System.out.println("enter the street you live in");
-                String street = input.next();
-                userAddress.setStreet(street);
-
-                /*get and set the city*/
-                System.out.println("enter the city you live in");
-                String city = input.next();
-                userAddress.setCity(city);
-
-                /*get and set the country*/
-                System.out.println("enter the country of residence");
-                String country = input.next();
-                userAddress.setCountry(country);
-
-                /*get the zipcode*/
-                System.out.println("enter zipcode");
-                String zipcode = input.next();
-                userAddress.setZipcode(zipcode);
-
-                break;
+                /*notify user and continue*/
+                System.out.println("username already exists!");
+                continue;
             }
 
-            /*persist the user*/
+            /*set the username*/
+            user.setUsername(userName);
 
-            /*check and connect to the persistence unit*/
-            if (!transaction.isActive())
-                transaction.begin();
+            /*get and ste the first name*/
+            System.out.println("enter your first name");
+            String firstName = input.next();
+            user.setFirstName(firstName);
 
-            /*persist the address*/
-            manager.persist(userAddress);
+            /*get and set the last name*/
+            System.out.println("enter your last name");
+            String lastName = input.next();
+            user.setLastName(lastName);
 
-            /*set the address of the user*/
+            /*get and set the contact */
+            System.out.println("enter your email address");
+            String contact = input.next();
+            user.setContact(contact);
+
+            /*get and set the user role*/
+            ROLE:
+            while (true)
+            {
+                System.out.println("enter the role (ADMIN, CASHIER, ACCOUNTANT, TELLER, USER)");
+                String userRole = input.next();
+                switch (userRole) {
+                    case "ADMIN" -> {
+                        user.setRole(AdminRole.getInstance());
+                        break ROLE;
+                    }
+                    case "CASHIER" -> {
+                        user.setRole(CashierRole.getInstance());
+                        break ROLE;
+                    }
+                    case "ACCOUNTANT" -> {
+                        Role role = AccountantRole.getInstance();
+                        user.setRole(role);
+                        break ROLE;
+                    }
+                    case "TELLER" -> {
+                        user.setRole(TellerRole.getInstance());
+                        break ROLE;
+                    }
+                    case "USER" -> {
+                        user.setRole(UserRole.getInstance());
+                        break ROLE;
+                    }
+                    default -> {
+                        System.out.println("no such role");
+                    }
+                }
+            }
+
+            /*get and set the password */
+            System.out.println("enter your password");
+            String password = input.next();
+            user.setPassword(password);
+
+            /*get the address of the user.
+            * get and set the street */
+            System.out.println("enter the street you live in");
+            String street = input.next();
+            userAddress.setStreet(street);
+
+            /*get and set the city*/
+            System.out.println("enter the city you live in");
+            String city = input.next();
+            userAddress.setCity(city);
+
+            /*get and set the country*/
+            System.out.println("enter the country of residence");
+            String country = input.next();
+            userAddress.setCountry(country);
+
+            /*get the zipcode*/
+            System.out.println("enter zipcode");
+            String zipcode = input.next();
+            userAddress.setZipcode(zipcode);
+
+            /*set user address*/
             user.setAddress(userAddress);
 
-            /*persist the role*/
-            manager.persist(user.getRole());
-
             /*persist the user*/
-            manager.persist(user);
+            if (!userManagementService.addUser(userAddress, user.getRole(), user)){
 
-            /*commit the transaction*/
-            transaction.commit();
-
+                /*notify the user and continue*/
+                System.out.println("an error occurred");
+                continue;
+            }
+            break;
         }
 
         /*return success when the method has exited successfully*/
-        return "success";
+        return true;
     }
 
     /**
