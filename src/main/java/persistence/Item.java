@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2023. This code is protected under the GPL 2.0 license.
+ */
+
 package persistence;
 
 import jakarta.persistence.Entity;
@@ -16,8 +20,9 @@ public class Item {
     @Id
     @GeneratedValue
     private long id;
+
     private String itemName;
-    @GeneratedValue
+    @GeneratedValue(generator = "123123")
     private int serialNumber;
     private BigDecimal price;
 

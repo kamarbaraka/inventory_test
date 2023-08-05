@@ -161,7 +161,7 @@ public class OrderManagementService {
                 ).setParameter("name", inventory.getInventoryName()).getSingleResult();
 
                 /*update the count*/
-                persistedInventory.setCount(persistedInventory.getCount() - numberOfOrderedItems);
+                persistedInventory.setItemCount(persistedInventory.getItemCount() - numberOfOrderedItems);
 
                 /*commit transaction*/
                 transaction.commit();
@@ -170,5 +170,45 @@ public class OrderManagementService {
 
             }
         }
+    }
+
+    public boolean signDeliveredOrder(long itemOrderId){
+
+        /*construct an entity manager factory*/
+        try (EntityManagerFactory factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT)) {
+
+            /*construct an entity manager*/
+            try (EntityManager manager = factory.createEntityManager()) {
+
+                /*get the transaction*/
+                EntityTransaction transaction = manager.getTransaction();
+
+                /*begin the signing process.
+                * check and begin transaction*/
+                if (!transaction.isActive())
+                    transaction.begin();
+
+                try
+                {
+                    /*get the item order by id*/
+                    ItemOrder itemOrder = manager.createQuery(
+                            "select itemOrder from ItemOrder itemOrder where id=:itemOrderId", ItemOrder.class
+                    ).setParameter("itemOrderId", itemOrderId).getSingleResult();
+
+                    /*sign it off by setting the status to complete*/
+                    itemOrder.setStatus("completed");
+
+                    /*commit the transaction*/
+                    transaction.commit();
+                }
+                catch (Exception exception){
+
+                    /*return false on failure*/
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 }

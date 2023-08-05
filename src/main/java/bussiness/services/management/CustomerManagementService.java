@@ -97,7 +97,7 @@ public class CustomerManagementService {
                                         switch (input.next()){
 
                                             case "1" -> {continue CASE1;}
-                                            case "2" -> {continue CHANGE;}
+                                            case "2" -> {break START;}
                                             default -> {
                                                 Toolkit.getDefaultToolkit().beep();
                                                 System.out.println("invalid option");
@@ -138,7 +138,7 @@ public class CustomerManagementService {
                                         switch (input.next()){
 
                                             case "1" -> {continue CASE2;}
-                                            case "2" -> {continue CHANGE;}
+                                            case "2" -> {break START;}
                                             default -> {
                                                 Toolkit.getDefaultToolkit().beep();
                                                 System.out.println("invalid option");
@@ -156,8 +156,6 @@ public class CustomerManagementService {
                         }
 
                     }
-
-
                 }
                 catch (NoResultException exception){
                     /*prompt the user*/

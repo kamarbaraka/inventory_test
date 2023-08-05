@@ -1,5 +1,8 @@
-package persistence;
+/*
+ * Copyright (c) 2023. This code is protected under the GPL 2.0 license.
+ */
 
+package persistence;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

@@ -39,15 +39,10 @@ public class UserManagementService {
                     /*commit transaction*/
                     transaction.commit();
 
-                    if (factory.isOpen())
-                        factory.close();
                     return true;
 
                 }
                 catch (NoResultException exception){
-
-                    if (factory.isOpen())
-                        factory.close();
 
                     /*return false if user doesn't exist*/
                     return false;
@@ -108,12 +103,19 @@ public class UserManagementService {
                 /*get the transaction*/
                 EntityTransaction transaction = manager.getTransaction();
 
+                /*check and begin transaction*/
+                if (!transaction.isActive())
+                    transaction.begin();
+
                 /*query for user*/
                 try
                 {
                     user = manager.createQuery(
                             "select user from User user where username=:userName and password=:passWord", User.class
                     ).setParameter("userName", userName).setParameter("passWord", passWord).getSingleResult();
+
+                    /*commit the transaction*/
+                    transaction.commit();
                 }
                 catch (NoResultException exception){
 

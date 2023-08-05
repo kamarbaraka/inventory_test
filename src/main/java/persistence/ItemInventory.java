@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2023. This code is protected under the GPL 2.0 license.
+ */
+
 package persistence;
 
 import jakarta.persistence.*;
@@ -16,13 +20,13 @@ public class ItemInventory {
     @ManyToOne
     private Item item;
 
-    private int count;
+    private int itemCount;
 
     @OneToOne
     private ItemLocation itemLocation;
 
-    public void setCount(int count) {
-        this.count = count;
+    public void setItemCount(int count) {
+        this.itemCount = count;
     }
 
     public void addItem(Item item){
@@ -42,8 +46,8 @@ public class ItemInventory {
         this.inventoryName = inventoryName;
     }
 
-    public int getCount() {
-        return count;
+    public int getItemCount() {
+        return itemCount;
     }
 
     public ItemLocation getItemLocation() {

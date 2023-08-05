@@ -38,7 +38,7 @@ public class StockManagementService {
                     ).setParameter("name", item.getItemName()).getSingleResult();
 
                     /*update the count*/
-                    persistedItemInventory.setCount(persistedItemInventory.getCount() + inventory.getCount());
+                    persistedItemInventory.setItemCount(persistedItemInventory.getItemCount() + inventory.getItemCount());
 
                     /*commit transaction*/
                     transaction.commit();
@@ -63,5 +63,36 @@ public class StockManagementService {
                 }
             }
         }
+    }
+
+    public boolean updateStockPrice(String itemName, double price){
+
+        /*construct an entity manager factory*/
+        try (EntityManagerFactory factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT)) {
+
+            /*construct an entity manager*/
+            try (EntityManager manager = factory.createEntityManager()) {
+
+                /*get the transaction*/
+                EntityTransaction transaction = manager.getTransaction();
+
+                /*check and begin transaction*/
+                if (!transaction.isActive())
+                    transaction.begin();
+
+                /*perform the update*/
+                Item persistedItem = manager.createQuery(
+                        "select item from Item item where itemName=:itemName", Item.class
+                ).setParameter("itemName", itemName).getSingleResult();
+
+                persistedItem.setPrice(price);
+
+                /*commit the transaction*/
+                transaction.commit();
+            }
+
+        }
+
+        return true;
     }
 }

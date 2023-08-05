@@ -1,8 +1,5 @@
 package bussiness.services.operational;
-
-import bussiness.services.management.InventoryManagementService;
 import bussiness.services.management.StockManagementService;
-import jakarta.persistence.*;
 import persistence.Item;
 import persistence.ItemInventory;
 import persistence.ItemLocation;
@@ -61,7 +58,7 @@ public class StockPurchaseServiceOperation {
             inventory.setInventoryName(inputItemName);
             inventory.addItem(item);
             inventory.setItemLocation(location);
-            inventory.setCount(inputCount);
+            inventory.setItemCount(inputCount);
 
             /*restock the item*/
             if (!stockManagementService.addStock(item, location, inventory)){

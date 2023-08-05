@@ -1,0 +1,1 @@
+GET {{host}}/inventory_test_war_exploded/hello-servlet

@@ -2,6 +2,7 @@ package bussiness.services.operational;
 
 import bussiness.services.management.InventoryManagementService;
 import bussiness.services.management.OrderManagementService;
+import bussiness.services.tracking.InventoryTrackingService;
 import persistence.*;
 
 import java.math.BigDecimal;
@@ -101,7 +102,7 @@ public class OrderingServiceOperation {
                 }
 
                 /*check for the count in the inventory*/
-                if (itemInventory.getCount() == 0) {
+                if (itemInventory.getItemCount() == 0) {
 
                     /*notify the user and continue*/
                     System.out.println("item is out of stock!, continue? (Y or N)");
@@ -136,10 +137,10 @@ public class OrderingServiceOperation {
                 numberOfItemsToOrder = input.nextInt();
 
                 /*check if possible to order such amount*/
-                if (numberOfItemsToOrder > itemInventory.getCount()){
+                if (numberOfItemsToOrder > itemInventory.getItemCount()){
 
                     /*notify the user and continue*/
-                    System.out.printf("the maximum you can order is %d, proceed? (Y or N) %n", itemInventory.getCount());
+                    System.out.printf("the maximum you can order is %d, proceed? (Y or N) %n", itemInventory.getItemCount());
                     String response = input.next();
 
                     switch (response){

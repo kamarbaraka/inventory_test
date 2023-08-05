@@ -36,7 +36,7 @@ public class InventoryManagementService {
                             ItemInventory.class).setParameter("itemName", item.getItemName()).getSingleResult();
 
                     /*update count*/
-                    inventory.setCount(inventory.getCount() + count);
+                    inventory.setItemCount(inventory.getItemCount() + count);
 
                     /*commit transaction*/
                     transaction.commit();
