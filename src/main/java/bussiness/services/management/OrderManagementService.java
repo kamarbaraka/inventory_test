@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2023. This code is protected under the GPL 2.0 license.
+ */
+
 package bussiness.services.management;
 
 import jakarta.persistence.EntityManager;
@@ -15,6 +19,13 @@ import java.util.List;
 public class OrderManagementService {
 
     private final String PERSISTENCE_UNIT = "inventory_management";
+
+    /*declare pending orders list*/
+    private List<ItemOrder> pendingOrders;
+    /*declare dispatched orders list*/
+    private List<ItemOrder> dispatchedOrders;
+    /*declare completed orders lists*/
+    private List<ItemOrder> completedOrders;
 
     public boolean addOrder(Address address, Payment payment, Customer customer, Bill bill, ItemOrder itemOrder){
 
@@ -43,11 +54,10 @@ public class OrderManagementService {
                 /*commit the transaction*/
                 transaction.commit();
 
+                return true;
+
             }
-
         }
-
-        return true;
     }
 
     public boolean dispatchPendingOrders(){
@@ -81,6 +91,8 @@ public class OrderManagementService {
 
                     /*commit transaction*/
                     transaction.commit();
+
+                    return true;
                 }
                 catch (Exception exception){
 
@@ -91,8 +103,6 @@ public class OrderManagementService {
             }
 
         }
-
-        return true;
     }
 
     public boolean dispatchOrder(long orderId){
@@ -125,18 +135,19 @@ public class OrderManagementService {
                     /*commit transaction*/
                     transaction.commit();
 
+                    return true;
+
                 }
                 catch (Exception exception){
 
                     /*return false on fail*/
+                    System.out.println("no such order");
                     return false;
                 }
 
             }
 
         }
-
-        return true;
     }
 
     public boolean updateCount(ItemInventory inventory, int numberOfOrderedItems){
@@ -200,6 +211,9 @@ public class OrderManagementService {
 
                     /*commit the transaction*/
                     transaction.commit();
+
+                    return true;
+
                 }
                 catch (Exception exception){
 
@@ -208,7 +222,82 @@ public class OrderManagementService {
                 }
             }
         }
+    }
 
-        return true;
+    public boolean checkOrders(){
+
+        /*define pending status*/
+        String pendingStatus = "pending";
+        String dispatchedStatus = "dispatched";
+        String completedStatus = "completed";
+
+        /*construct an entity manager factory*/
+        try (EntityManagerFactory factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT)) {
+
+            /*construct an entity manager*/
+            try (EntityManager manager = factory.createEntityManager()) {
+
+                /*get the entity transaction*/
+                EntityTransaction transaction = manager.getTransaction();
+
+                /*check and begin transaction*/
+                if (!transaction.isActive())
+                    transaction.begin();
+
+                /*create the query for pending orders*/
+                this.pendingOrders = manager.createQuery(
+                        "select itemOrder from ItemOrder itemOrder where status=:pendingStatus", ItemOrder.class
+                ).setParameter("pendingStatus", pendingStatus).getResultList();
+
+                /*create a query for dispatched orders.*/
+                this.dispatchedOrders = manager.createQuery(
+                        "select itemOrder from ItemOrder itemOrder where status=:dispatchedStatus", ItemOrder.class
+                ).setParameter("dispatchedStatus", dispatchedStatus).getResultList();
+
+                /*create a query for completed orders*/
+                this.completedOrders = manager.createQuery(
+                        "select itemOrder from ItemOrder itemOrder where status=:completedStatus", ItemOrder.class
+                ).setParameter("completedStatus", completedStatus).getResultList();
+
+                /*commit the transaction*/
+                transaction.commit();
+
+                return true;
+
+            }
+        }
+    }
+
+    public String getPERSISTENCE_UNIT() {
+        return PERSISTENCE_UNIT;
+    }
+
+    public List<ItemOrder> getPendingOrders() {
+        return pendingOrders;
+    }
+
+    public List<ItemOrder> getDispatchedOrders() {
+        return dispatchedOrders;
+    }
+
+    public List<ItemOrder> getCompletedOrders() {
+        return completedOrders;
+    }
+
+    /**
+     * testing */
+    public static void main(String[] args) {
+
+        /*construct the order management service*/
+        OrderManagementService service = new OrderManagementService();
+
+        /*dispatch order*/
+        if (!service.signDeliveredOrder(52)) {
+            System.out.println("error occurred!");
+            return;
+        }
+
+        System.out.println("completed successfully");
+
     }
 }

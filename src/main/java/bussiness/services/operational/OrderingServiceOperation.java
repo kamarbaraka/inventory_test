@@ -155,7 +155,7 @@ public class OrderingServiceOperation {
             }
 
             /*compute the amount to pay*/
-            BigDecimal amountToPay = itemPrice.multiply(BigDecimal.valueOf(3));
+            BigDecimal amountToPay = itemPrice.multiply(BigDecimal.valueOf(numberOfItemsToOrder));
 
             /*notify the customer*/
             System.out.printf("total amount to pay %s %n proceed?(Y or N) %n", amountToPay);

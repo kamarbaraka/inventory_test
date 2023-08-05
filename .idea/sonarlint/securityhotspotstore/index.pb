@@ -34,12 +34,6 @@ a
 z
 Jsrc/main/java/bussiness/services/management/CustomerManagementService.java,d\4\d4eb59186f8fa0dd3d28863fd38894c01b648126
 w
-Gsrc/main/java/bussiness/services/management/OrderManagementService.java,d\a\da956d5b642650e2ebfb3f3da738e87e2631448a
-{
-Ksrc/main/java/bussiness/services/management/InventoryManagementService.java,e\c\ecc738d7976020eeb96b0a3a24fdbfe1799b8f35
-
-Osrc/main/java/bussiness/services/operational/StockPurchaseServiceOperation.java,9\a\9a8545ffd48801392e8e376a7a58f3a73d422608
-w
 Gsrc/main/java/bussiness/services/management/StockManagementService.java,a\0\a0e08821e634d0feed266dd05c05c166b6ee9598
 v
 Fsrc/main/java/bussiness/services/management/UserManagementService.java,5\8\585202ee50a6f55b2babf945b875cdc29a184585
@@ -53,11 +47,5 @@ I
 src/main/webapp/index.jsp,8\e\8e6d3b70c9f5b02570779b0441540d45eceb0ded
 j
 :src/main/java/com/example/inventory_test/HelloServlet.java,e\0\e03641e2a93d1891fe2138c4938b40028a477748
-z
-Jsrc/main/java/bussiness/services/operational/OrderingServiceOperation.java,2\b\2bf948c64b0a6594457272e76c9d0ea732324ba8
-w
-Gsrc/main/java/bussiness/services/tracking/InventoryTrackingService.java,b\2\b22e23222a60ae41f856ff7a12529b15e1503564
-s
-Csrc/main/java/bussiness/services/tracking/OrderTrackingService.java,f\4\f40d22b0d54e0bf17175dba43fa6bbe8327c8b69
 [
 +src/main/java/persistence/ItemLocation.java,3\9\39ce2e3dbaff87956b47f1427876d8f9373cda1b

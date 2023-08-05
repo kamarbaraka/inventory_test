@@ -49,7 +49,7 @@ public class InventoryTrackingService implements Runnable{
                         itemInventories.forEach(itemInventory -> System.err.printf("%s ", itemInventory.getInventoryName()));
 
                         /*wait for 2 mins before the next check*/
-                        Thread.sleep(12000);
+                        Thread.sleep(2000);
 
                     }
                 }
