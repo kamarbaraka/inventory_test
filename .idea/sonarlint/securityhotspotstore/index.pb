@@ -45,3 +45,19 @@ v
 Fsrc/main/java/bussiness/services/management/UserManagementService.java,5\8\585202ee50a6f55b2babf945b875cdc29a184585
 7
 pom.xml,4\4\442292b8a7efeabbe4cc176709b833b1792140ec
+v
+Fsrc/main/java/bussiness/services/reporting/InventoryReportService.java,7\2\7216ef3378a67b8f5dfd49d65d9e17dded11847e
+O
+src/main/webapp/WEB-INF/web.xml,2\e\2e22b6edd746fa3dc40ad7276c87c8d87d72a392
+I
+src/main/webapp/index.jsp,8\e\8e6d3b70c9f5b02570779b0441540d45eceb0ded
+j
+:src/main/java/com/example/inventory_test/HelloServlet.java,e\0\e03641e2a93d1891fe2138c4938b40028a477748
+z
+Jsrc/main/java/bussiness/services/operational/OrderingServiceOperation.java,2\b\2bf948c64b0a6594457272e76c9d0ea732324ba8
+w
+Gsrc/main/java/bussiness/services/tracking/InventoryTrackingService.java,b\2\b22e23222a60ae41f856ff7a12529b15e1503564
+s
+Csrc/main/java/bussiness/services/tracking/OrderTrackingService.java,f\4\f40d22b0d54e0bf17175dba43fa6bbe8327c8b69
+[
++src/main/java/persistence/ItemLocation.java,3\9\39ce2e3dbaff87956b47f1427876d8f9373cda1b

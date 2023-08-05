@@ -18,13 +18,16 @@ import java.util.List;
 @Entity
 public class Bill {
 
+    /*generate an id primary key*/
     @Id
     @GeneratedValue
     private long id;
 
+    /*assign a one-to-many relationship with the customer object*/
     @OneToOne
     private Customer customer;
 
+    /*assign a many-to-one relationship with the payment object*/
     @ManyToOne
     private Payment payment;
 
